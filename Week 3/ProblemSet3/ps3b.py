@@ -161,7 +161,7 @@ class Patient(object):
         self.viruses = [virus for virus in self.getViruses() if not virus.doesClear()]
 
         # For each virus that does not clear ...
-        for virus in self.getViruses():
+        for virus in self.getViruses()[:]:
             # If virus max pop not exceeded
             if self.getTotalPop() < self.getMaxPop():
                 # Calculate virus pop density
@@ -242,7 +242,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
 #
 # SANDBOX PROBLEM 3
 #
-# simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
+simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
 
 
 #
@@ -353,12 +353,14 @@ class ResistantVirus(SimpleVirus):
         reproduce = random.random()
         # If all active drugs have resistances within virus and virus does then reproduce
         if all(self.isResistantTo(drugs) for drugs in activeDrugs) and reproduce <= (self.getMaxBirthProb() * (1 - float(popDensity))):
-            # Dictionary comp:
+
+            # Dictionary comp method:
             # For each k/v pair in resistances:
             #   If random number is >= the mutProb then leave untouched
             #   Else switch V for K in pair (ie. if True now False)
             resistances = {k:v if random.random() >= self.mutProb else not v for k, v in self.resistances.items()}
-            # Manually done:
+
+            # Long form example:
             # resistances = {}
             # for k, v in self.resistances.items():
             #     if random.random() >= self.mutProb:
@@ -369,14 +371,6 @@ class ResistantVirus(SimpleVirus):
             return ResistantVirus(self.getMaxBirthProb(), self.getClearProb(), resistances, self.getMutProb())
         else:
             raise NoChildException
-
-#
-# SANDBOX PROBLEM 4
-#
-# newVirus = ResistantVirus(1.0, 0.1, {'guttagonol':True, 'srinol':False}, 0.5)
-# print newVirus.isResistantTo('guttagonol')
-# for i in xrange(10):
-#     newVirus.reproduce(0.5, ['guttagonol'])
 
 
 class TreatedPatient(Patient):
@@ -414,8 +408,8 @@ class TreatedPatient(Patient):
 
         postcondition: The list of drugs being administered to a patient is updated
         """
-
-
+        if newDrug not in self.activeDrugs:
+            self.activeDrugs.append(newDrug)
 
     def getPrescriptions(self):
         """
@@ -425,7 +419,6 @@ class TreatedPatient(Patient):
         patient.
         """
         return self.activeDrugs
-
 
     def getResistPop(self, drugResist):
         """
@@ -438,9 +431,7 @@ class TreatedPatient(Patient):
         returns: The population of viruses (an integer) with resistances to all
         drugs in the drugResist list.
         """
-
-        # TODO
-
+        return len([virus for virus in self.getViruses() if all(virus.isResistantTo(drug) for drug in drugResist)])
 
     def update(self):
         """
@@ -463,15 +454,32 @@ class TreatedPatient(Patient):
         integer)
         """
 
-        # TODO
+        self.viruses = [virus for virus in self.viruses if not virus.doesClear()]
 
+        for virus in self.getViruses()[:]:
+             # If virus max pop not exceeded
+            if self.getTotalPop() < self.getMaxPop():
+                # Calculate virus pop density
+                popDensity = float(self.getTotalPop()) / float(self.getMaxPop())
+                try:
+                    self.viruses.append(virus.reproduce(popDensity, self.getPrescriptions()))
+                except NoChildException:
+                    pass
+
+        return self.getTotalPop()
+
+# #
+# # SANDBOX PROBLEM 4
+# #
+# MAX = 10000
+# viruses = [ResistantVirus(0.5, 0.1, {}, 0.5), ResistantVirus(0.5, 0.1, {'drugA':True}, 0.5), ResistantVirus(0.5, 0.1, {'drugA':True}, 0.5)]
+# patient = TreatedPatient(viruses, MAX)
 #
-# SANDBOX PROBLEM 4b
+# # while patient.getTotalPop() > 0 and patient.getTotalPop() < MAX:
+# for x in range(10):
+#     print patient.update()
 #
-# newVirus = ResistantVirus(1.0, 0.1, {'guttagonol':True, 'srinol':False}, 0.5)
-# print newVirus.isResistantTo('guttagonol')
-# for i in xrange(10):
-#     newVirus.reproduce(0.5, ['guttagonol'])
+# # print patient.getResistPop(['drugA'])
 
 #
 # PROBLEM 5
