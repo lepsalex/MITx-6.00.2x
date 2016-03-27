@@ -237,7 +237,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
         total = 0
         for y in xrange(len(trials)):
             total += trials[y][x]
-        results.append(float(total / len(trials)))
+        results.append(total / float(len(trials)))
 
     # Plot Results
     pylab.plot(results)
@@ -250,7 +250,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
 #
 # SANDBOX PROBLEM 3
 #
-# simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
+simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
 
 
 #
