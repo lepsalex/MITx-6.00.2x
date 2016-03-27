@@ -160,6 +160,14 @@ class Patient(object):
         # Clear viruses that clear in list of viruses
         self.viruses = [virus for virus in self.getViruses() if not virus.doesClear()]
 
+        """ IMPORTANT NOTE:
+            You will see below that we are slicing the list with [:], this returns
+            a new list ... but why? ... because we are potentially manipulating the list
+            by adding additional items to the end, we don't want to traverse the newly added
+            items as part of this loop. We could have assigned a new variable but this works
+            just as well and is a little more compact
+        """
+
         # For each virus that does not clear ...
         for virus in self.getViruses()[:]:
             # If virus max pop not exceeded
@@ -242,7 +250,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
 #
 # SANDBOX PROBLEM 3
 #
-simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
+# simulationWithoutDrug(100, 1000, 0.1, 0.05, 10)
 
 
 #
@@ -484,8 +492,30 @@ class TreatedPatient(Patient):
 #
 # PROBLEM 5
 #
-def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
-                       mutProb, numTrials):
+def runTrialwithDrugs(numViruses, maxPop, maxBirthProb, clearProb, resistances, mutProb):
+    viruses = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb) for x in xrange(numViruses)]
+    patient = TreatedPatient(viruses, maxPop)
+    prescription = 'guttagonol'
+
+    trial = []
+
+    # Run first half of steps without drugs in patient
+    for x in xrange(150):
+        patient.update()
+        trial.append((patient.getTotalPop(), patient.getResistPop([prescription])))
+
+    # Add drug guttagonol
+    patient.addPrescription(prescription)
+
+    # Run second half of time steps with drug in patient
+    for x in xrange(150):
+        patient.update()
+        trial.append((patient.getTotalPop(), patient.getResistPop([prescription])))
+
+    # Return list with each step of virus growth
+    return trial
+
+def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances, mutProb, numTrials):
     """
     Runs simulations and plots graphs for problem 5.
 
@@ -507,4 +537,34 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
 
     """
 
-    # TODO
+    trials = [runTrialwithDrugs(numViruses, maxPop, maxBirthProb, clearProb, resistances, mutProb) for x in xrange(numTrials)]
+
+    trialLength = len(trials[0])
+
+    # Averaged result lists to be plotted
+    resultsTotalPop = []
+    resultsResistPop = []
+
+    for x in xrange(trialLength):
+        resultsTotalPopCount = 0
+        resultsResistPopCount = 0
+        for y in xrange(len(trials)):
+            resultsTotalPopCount += trials[y][x][0]
+            resultsResistPopCount += trials[y][x][1]
+        resultsTotalPop.append(resultsTotalPopCount / float(len(trials)))
+        resultsResistPop.append(resultsResistPopCount / float(len(trials)))
+
+    # Plot Results
+    pylab.plot(resultsTotalPop, label="Total Virus Population")
+    pylab.plot(resultsResistPop, label="Resistant Virus Population")
+    pylab.title('ResistantVirus simulation')
+    pylab.xlabel('time step')
+    pylab.ylabel('# viruses')
+    pylab.legend()
+    pylab.show()
+
+#
+# SANDBOX PROBLEM 5
+#
+# simulationWithDrug(1, 10, 1.0, 0.0, {}, 1.0, 5)
+simulationWithDrug(100, 1000, 0.1, 0.05, {'guttagonol': False}, 0.005, 2)
