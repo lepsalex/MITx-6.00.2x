@@ -22,6 +22,7 @@ class Node(object):
         # Think: Why would we want to do this?
         return self.name.__hash__()
 
+
 class Edge(object):
     def __init__(self, src, dest):
         self.src = src
@@ -32,6 +33,11 @@ class Edge(object):
         return self.dest
     def __str__(self):
         return '{0}->{1}'.format(self.src, self.dest)
+
+class WeightedEdge(Edge):
+    # Extends Edge class by adding weighing values
+    # TODO
+
 
 class Digraph(object):
     """
@@ -68,3 +74,41 @@ class Digraph(object):
             for d in self.edges[str(k)]:
                 res = '{0}{1}->{2}\n'.format(res, k, d)
         return res[:-1]
+
+
+class WeightedGraph(Digraph):
+    # Extends Digraph class by adding consideration for weighted edges
+    # TODO
+
+
+# TEST AREA
+def runTest():
+    g = WeightedDigraph()
+    na = Node('a')
+    nb = Node('b')
+    nc = Node('c')
+    g.addNode(na)
+    g.addNode(nb)
+    g.addNode(nc)
+    e1 = WeightedEdge(na, nb, 15, 10)
+    print e1
+    # a->b (15, 10)
+    print e1.getTotalDistance()
+    # 15
+    print e1.getOutdoorDistance()
+    # 10
+    e2 = WeightedEdge(na, nc, 14, 6)
+    e3 = WeightedEdge(nb, nc, 3, 1)
+    print e2
+    # a->c (14, 6)
+    print e3
+    # b->c (3, 1)
+    g.addEdge(e1)
+    g.addEdge(e2)
+    g.addEdge(e3)
+    print g
+    # a->b (15.0, 10.0)
+    # a->c (14.0, 6.0)
+    # b->c (3.0, 1.0)
+
+# runTest()
