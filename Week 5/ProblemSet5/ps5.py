@@ -59,7 +59,7 @@ def load_map(mapFilename):
         except ValueError:
             pass
         try:
-            weightedDigraph.addEdge(WeightedEdge(data[0], data[1], data[2], data[3]))
+            weightedDigraph.addEdge(WeightedEdge(Node(data[0]), Node(data[1]), float(data[2]), float(data[3])))
         except ValueError:
             pass
 
