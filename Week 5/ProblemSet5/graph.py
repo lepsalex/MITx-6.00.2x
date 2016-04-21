@@ -138,4 +138,4 @@ def runTest():
     # a->c (14.0, 6.0)
     # b->c (3.0, 1.0)
 
-runTest()
+# runTest()
