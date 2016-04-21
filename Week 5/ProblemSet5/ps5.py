@@ -67,11 +67,11 @@ def load_map(mapFilename):
 
 
 # Problem 2 Test
-# mitMap = load_map('mit_map.txt')
+mitMap = load_map('mit_map.txt')
 # print isinstance(mitMap, Digraph)
 # print isinstance(mitMap, WeightedDigraph)
 # print mitMap.nodes
-# print mitMap.edges
+print mitMap.edges
 
 
 #
@@ -80,6 +80,33 @@ def load_map(mapFilename):
 # State the optimization problem as a function to minimize
 # and what the constraints are
 #
+
+def getAllPaths(digraph, start, end, path=[]):
+    # Returns list of all possilbe paths
+    path = path + [start]
+    if start == end:
+        return [path]
+
+    allPaths = []
+    for node in digraph.childrenOf(start):
+        if node not in path:
+            newPaths = getAllPaths(digraph, node, end, path)
+            for newPath in newPaths:
+                allPaths.append(newPath)
+
+    return allPaths
+
+def calcDistance(digraph, path):
+    # Sums up distances in a given path
+    totalDistance = 0
+    totalOutdoorDistance = 0
+    # For each node in path up to second-last one
+    # for x in xrange(len(path) - 1):
+
+
+# Test Output
+# mitMap = load_map('mit_map.txt')
+# print getAllPaths(mitMap, Node(32), Node(56))
 
 def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
     """
@@ -105,8 +132,17 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
         If there exists no path that satisfies maxTotalDist and
         maxDistOutdoors constraints, then raises a ValueError.
     """
-    #TODO
-    pass
+    path = path + [start]
+    if start == end:
+        return path
+    for node in digraph.childrenOf(start):
+        # Avoids infinite loops
+        if node not in path:
+            if shortest == None or len(path)<len(shortest):
+                newPath = bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors)
+                if newPath != None:
+                    shortest = newPath
+    return shortest
 
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
