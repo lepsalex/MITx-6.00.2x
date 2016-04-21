@@ -35,8 +35,15 @@ class Edge(object):
         return '{0}->{1}'.format(self.src, self.dest)
 
 class WeightedEdge(Edge):
-    # Extends Edge class by adding weighing values
-    # TODO
+    __init__(self, src, dest, weight1, weight2):
+        self.totalDistance = weight1
+        self.outdoorDistance = weight2
+    def getTotalDistance(self):
+        return self.totalDistance
+    def getOutdoorDistance(self):
+        return self.outdoorDistance
+    def __str__(self):
+        return '{0}->{1} ({2}, {3})'.format(self.src, self.dest, self.getTotalDistance(), self.getOutdoorDistance())
 
 
 class Digraph(object):
@@ -79,6 +86,10 @@ class Digraph(object):
 class WeightedGraph(Digraph):
     # Extends Digraph class by adding consideration for weighted edges
     # TODO
+    # __init__(self)
+    # addEdge(self,edge)
+    # childrenOf(self,node)
+    # __str__(self)
 
 
 # TEST AREA
