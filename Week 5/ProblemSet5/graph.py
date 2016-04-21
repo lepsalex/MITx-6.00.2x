@@ -35,7 +35,7 @@ class Edge(object):
         return '{0}->{1}'.format(self.src, self.dest)
 
 class WeightedEdge(Edge):
-    __init__(self, src, dest, weight1, weight2):
+    def __init__(self, src, dest, weight1, weight2):
         super(WeightedEdge, self).__init__(src, dest)
         self.totalDistance = weight1
         self.outdoorDistance = weight2
@@ -44,7 +44,7 @@ class WeightedEdge(Edge):
     def getOutdoorDistance(self):
         return self.outdoorDistance
     def __str__(self):
-        return '{0}->{1} ({2}, {3})'.format(self.src, self.dest, self.totalDistance, self.getOutdoorDistance)
+        return '{0}->{1} ({2}, {3})'.format(self.src, self.dest, self.totalDistance, self.outdoorDistance)
 
 
 class Digraph(object):
@@ -84,14 +84,28 @@ class Digraph(object):
         return res[:-1]
 
 
-class WeightedGraph(Digraph):
-    # Extends Digraph class by adding consideration for weighted edges
-    # TODO
-    __init__(self):
-        super(WeightedGraph, self).__init__()
-    # addEdge(self,edge)
-    # childrenOf(self,node)
-    # __str__(self)
+class WeightedDigraph(Digraph):
+    def __init__(self):
+        super(WeightedDigraph, self).__init__()
+    def addEdge(self,edge):
+        src = edge.getSource()
+        dest = edge.getDestination()
+        if not(src in self.nodes and dest in self.nodes):
+            raise ValueError('Node not in graph')
+        totalDistance = edge.getTotalDistance()
+        outdoorDistance = edge.getOutdoorDistance()
+        self.edges[src].append((dest, totalDistance, outdoorDistance))
+    def childrenOf(self, node):
+        res = []
+        for e in self.edges[node]:
+            res.append(e[0])
+        return res
+    def __str__(self):
+        res = ''
+        for k in self.edges:
+            for d in self.edges[k]:
+                res += '{0}->{1} ({2}, {3})\n'.format(k, d[0], float(d[1]), float(d[2]))
+        return res[:-1]
 
 
 # TEST AREA
@@ -124,4 +138,4 @@ def runTest():
     # a->c (14.0, 6.0)
     # b->c (3.0, 1.0)
 
-# runTest()
+runTest()
