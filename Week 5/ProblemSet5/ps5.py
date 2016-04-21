@@ -67,11 +67,11 @@ def load_map(mapFilename):
 
 
 # Problem 2 Test
-mitMap = load_map('mit_map.txt')
+# mitMap = load_map('mit_map.txt')
 # print isinstance(mitMap, Digraph)
 # print isinstance(mitMap, WeightedDigraph)
 # print mitMap.nodes
-print mitMap.edges
+# print mitMap.edges
 
 
 #
