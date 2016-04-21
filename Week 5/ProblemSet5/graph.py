@@ -104,8 +104,8 @@ class WeightedDigraph(Digraph):
         res = ''
         for k in self.edges:
             for d in self.edges[k]:
-                res += '{0}->{1} ({2}, {3})\n'.format(k, d[0], float(d[1]), float(d[2]))
-        return res[:-1]
+                res += '{0}->{1} ({2}, {3})\n'.format(k, d[0], float(d[1][0]), float(d[1][1]))
+        return res
 
 
 # TEST AREA
