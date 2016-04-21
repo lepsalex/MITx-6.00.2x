@@ -82,18 +82,20 @@ print mitMap.edges
 #
 
 def getAllPaths(digraph, start, end, path=[]):
-    # Returns list of all possilbe paths
+    # If start is end, return empty path
     path = path + [start]
     if start == end:
         return [path]
 
+    # Store all possible paths
     allPaths = []
+    # Slight mod to lecture code to return ALL possible paths
     for node in digraph.childrenOf(start):
         if node not in path:
             newPaths = getAllPaths(digraph, node, end, path)
             for newPath in newPaths:
                 allPaths.append(newPath)
-
+    # Returns as list of all possilbe paths from start to end
     return allPaths
 
 def calcDistance(digraph, path):
