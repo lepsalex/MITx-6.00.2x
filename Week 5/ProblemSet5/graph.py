@@ -94,7 +94,7 @@ class WeightedDigraph(Digraph):
             raise ValueError('Node not in graph')
         totalDistance = edge.getTotalDistance()
         outdoorDistance = edge.getOutdoorDistance()
-        self.edges[src].append((dest, totalDistance, outdoorDistance))
+        self.edges[src].append([dest, (totalDistance, outdoorDistance)])
     def childrenOf(self, node):
         res = []
         for e in self.edges[node]:
