@@ -161,9 +161,9 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
 # print bruteForceSearch(mitMap, Node(32), Node(56), 200, 100)
 
 # Testing Grader Problems
-map1 = load_map('map1.txt')
-print map1
-print bruteForceSearch(map1, "1", "3", 100, 100)
+# map1 = load_map('map1.txt')
+# print map1
+# print bruteForceSearch(map1, "1", "3", 100, 100)
 
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
