@@ -251,11 +251,29 @@ def hCluster(points, linkage, numClusters, printHistory):
     return cS
 
 def test():
+    # Build Data (no scaling)
     points = buildCityPoints('cityTemps.txt', False)
-    hCluster(points, Cluster.singleLinkageDist, 10, False)
-    points = buildCityPoints('cityTemps.txt', True)
+
+    print '\n\n'
+    print 'Problem 3-1:\n'
     hCluster(points, Cluster.maxLinkageDist, 10, False)
-    hCluster(points, Cluster.averageLinkageDist, 10, False)
-    hCluster(points, Cluster.singleLinkageDist, 10, False)
+    print '\n\n'
+
+    print 'Problem 3-2 (non-scaled):\n'
+    hCluster(points, Cluster.singleLinkageDist, 5, False)
+    print '\n\n'
+
+    # Build Data (scaled)
+    points = buildCityPoints('cityTemps.txt', True)
+
+    print 'Problem 3-2 (scaled):\n'
+    hCluster(points, Cluster.singleLinkageDist, 5, False)
+    print '\n\n'
+
+    # hCluster(points, Cluster.maxLinkageDist, 10, False)
+    # print '\n\n'
+    # hCluster(points, Cluster.averageLinkageDist, 10, False)
+    # print '\n\n'
+    # hCluster(points, Cluster.singleLinkageDist, 10, False)
 
 test()
