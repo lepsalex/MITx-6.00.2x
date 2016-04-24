@@ -140,14 +140,27 @@ class ClusterSet(object):
         """ Returns a tuple containing the two most similar
         clusters in self
         Closest defined using the metric linkage """
-        # TO DO
-        pass
+        mergeTarget = (self.members[0], self.members[1])
+        dist = linkage(self.members[0], self.members[1])
+        for clusterOne in self.members:
+            for clusterTwo in self.members:
+                if clusterOne == clusterTwo:
+                    continue
+                if linkage(clusterOne, clusterTwo) < dist:
+                    dist = linkage(clusterOne, clusterTwo)
+                    mergeTarget = (clusterOne, clusterTwo)
+        return mergeTarget
     def mergeOne(self, linkage):
         """ Merges the two most simililar clusters in self
         Similar defined using the metric linkage
         Returns the clusters that were merged """
-        # TO DO
-        pass
+        if len(self.members) == 1:
+            return None
+        elif len(self.members) == 2:
+            return self.mergeClusters(self.members[0], self.members[1])
+        mergeTarget = self.findClosest(linkage)
+        self.mergeClusters(mergeTarget[0], mergeTarget[1])
+        return mergeTarget
     def numClusters(self):
         return len(self.members)
     def toStr(self):
@@ -240,9 +253,9 @@ def hCluster(points, linkage, numClusters, printHistory):
 def test():
     points = buildCityPoints('cityTemps.txt', False)
     hCluster(points, Cluster.singleLinkageDist, 10, False)
-    #points = buildCityPoints('cityTemps.txt', True)
-    #hCluster(points, Cluster.maxLinkageDist, 10, False)
-    #hCluster(points, Cluster.averageLinkageDist, 10, False)
-    #hCluster(points, Cluster.singleLinkageDist, 10, False)
+    points = buildCityPoints('cityTemps.txt', True)
+    hCluster(points, Cluster.maxLinkageDist, 10, False)
+    hCluster(points, Cluster.averageLinkageDist, 10, False)
+    hCluster(points, Cluster.singleLinkageDist, 10, False)
 
-#test()
+test()
