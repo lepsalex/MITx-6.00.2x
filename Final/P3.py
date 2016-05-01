@@ -1,4 +1,5 @@
 import random
+import numpy
 import pylab
 
 # Global Variables
@@ -112,4 +113,28 @@ def runSimulation(numSteps):
 
     return (rabbit_populations, fox_populations)
 
-print runSimulation(200)
+#
+# PROBEM 3B
+#
+
+polyfit = numpy.polyfit
+polyval = numpy.polyval
+plot = pylab.plot
+
+# Get data
+data = runSimulation(200)
+rabbitPopulationOverTime = data[0]
+foxPopulationOverTime = data[1]
+
+# Rabbit Curve
+rabbitCoeff = polyfit(range(len(rabbitPopulationOverTime)), rabbitPopulationOverTime, 2)
+plot(polyval(rabbitCoeff, range(len(rabbitPopulationOverTime))), label='Rabbit Pop')
+
+# Fox Curve
+foxCoeff = polyfit(range(len(foxPopulationOverTime)), foxPopulationOverTime, 2)
+plot(polyval(foxCoeff, range(len(foxPopulationOverTime))), label='Fox Pop')
+
+pylab.xlabel('time step')
+pylab.ylabel('population')
+pylab.legend()
+pylab.show()
